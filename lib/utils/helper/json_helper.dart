@@ -1,12 +1,15 @@
+import 'dart:convert';
 
-class ApiHelper {
+import 'package:flutter/services.dart';
 
+import '../../screen/home/model/home_model.dart';
 
-  void getApi()
-  {
-    String apiLink = "https://rapidapi.com/saicoder/api/famous-quotes4";
-    
+class JsonHelper {
+  Future<List<HomeModel>> getJson() async {
+    String jsonString = await rootBundle.loadString("assets/json/quotes.json");
+    List json = jsonDecode(jsonString);
 
+    List<HomeModel> data = json.map((e) => HomeModel.mapToModel(e)).toList();
+    return data;
   }
-
 }
