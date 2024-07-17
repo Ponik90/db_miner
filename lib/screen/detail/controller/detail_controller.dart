@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 
 class EditController extends GetxController {
   List<Color> bgColorList = [
@@ -23,7 +22,6 @@ class EditController extends GetxController {
 
   List<String> bgImageList = [
     "assets/bgImage/bg1.jpg",
-    "assets/bgImage/bg2.jpg",
     "assets/bgImage/bg3.jpg",
     "assets/bgImage/bg4.jpg",
     "assets/bgImage/bg5.jpg",

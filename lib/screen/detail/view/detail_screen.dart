@@ -1,10 +1,15 @@
-import 'dart:ffi';
+import 'dart:io';
 
-import 'package:db_miner_app/screen/detail/controller/edit_controller.dart';
+import 'package:db_miner_app/screen/detail/controller/detail_controller.dart';
 import 'package:db_miner_app/screen/home/controller/home_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:ui' as ui;
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key});
@@ -18,6 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
   EditController editController = Get.put(EditController());
   List l1 = Get.arguments;
   List<Color> bgColor = [Colors.white, Colors.black, ...Colors.primaries];
+  GlobalKey repaintKey = GlobalKey();
 
   @override
   void initState() {
@@ -30,41 +36,73 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail Quotes"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              RenderRepaintBoundary boundry = repaintKey.currentContext!
+                  .findRenderObject() as RenderRepaintBoundary;
+              ui.Image image = await boundry.toImage();
+              ByteData? byteData =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
+              Uint8List data = byteData!.buffer.asUint8List();
+
+              Directory directory = await getTemporaryDirectory();
+              File f1 =
+                  await File("${directory.path}/image.jpg").writeAsBytes(data);
+              await ImageGallerySaver.saveFile(f1.path);
+              await Share.shareXFiles([XFile(f1.path)]);
+            },
+            icon: const Icon(Icons.share),
+          ),
+          IconButton(
+            onPressed: () async {
+              await Clipboard.setData(
+                ClipboardData(text: l1[0]),
+              );
+            },
+            icon: const Icon(Icons.copy),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Stack(
-            children: [
-              Obx(
-                () => editController.isImage.value == true
-                    ? Image.asset(
+          RepaintBoundary(
+            key: repaintKey,
+            child: Obx(
+              () => Container(
+                height: 300,
+                width: MediaQuery.sizeOf(context).width,
+                decoration: BoxDecoration(
+                  color: editController.bgColor.value,
+                  border: Border.all(
+                    color: editController.borderColor.value,
+                    width: 2,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Visibility(
+                      visible: editController.isImage.value,
+                      child: Image.asset(
                         editController.bgImage.value,
                         height: 300,
                         width: MediaQuery.sizeOf(context).width,
                         fit: BoxFit.fill,
-                      )
-                    : Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: editController.bgColor.value,
-                          border: Border.all(
-                            color: editController.borderColor.value,
-                            width: 2,
-                          ),
-                        ),
                       ),
-              ),
-              Obx(
-                () => SelectableText(
-                  "${l1[0]}",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      color: editController.txtColor.value,
-                      fontFamily: editController.fontStyle.value,
-                      fontSize: 30),
+                    ),
+                    Text(
+                      "${l1[0]}",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: editController.txtColor.value,
+                        fontFamily: editController.fontStyle.value,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
-              )
-            ],
+              ),
+            ),
           ),
           const SizedBox(
             height: 20,
