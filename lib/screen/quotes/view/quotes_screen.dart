@@ -12,43 +12,86 @@ class QuotesScreen extends StatefulWidget {
 
 class _QuotesScreenState extends State<QuotesScreen> {
   HomeController controller = Get.put(HomeController());
-  List<Color> colors = [Colors.green, ...Colors.primaries];
+  List<Color> colors = [Colors.green, ...Colors.accents];
   HomeModel m1 = Get.arguments;
+
+  //ApiHomeModel apiHomeModel = Get.arguments;
 
   @override
   void initState() {
     super.initState();
-    controller.getDate();
+    controller.getJsonData();
+    controller.getApiData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("${m1.category}"),
-      ),
-      body: GridView.builder(
+        appBar: AppBar(
+          title: Text("${m1.category}"),
+        ),
+        body: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemCount: m1.quotes!.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                Get.toNamed(
+                  'detail',
+                  arguments: [
+                    m1.quotes![index],
+                    m1.author![index],
+                    m1.category
+                  ],
+                );
+              },
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: colors[index],
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  "${m1.quotes![index]}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            );
+          },
+        ));
+  }
+}
+
+/*
+GridView.builder(
         gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemCount: m1.quotes!.length,
+        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemCount: apiHomeModel.text!.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
-              Get.toNamed(
-                'detail',
-                arguments: [m1.quotes![index], m1.author![index], m1.category],
-              );
+              // Get.toNamed(
+              //   'detail',
+              //   arguments: [m1.quotes![index], m1.author![index], m1.category],
+              // );
             },
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
-              color: colors[index] ,
-              child: Text("${m1.quotes![index]}"),
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: colors[index], borderRadius: BorderRadius.circular(5),),
+              child: Text(
+                "${apiHomeModel.text}",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
             ),
           );
         },
       ),
-    );
-  }
-}
+* */

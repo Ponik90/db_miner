@@ -95,5 +95,16 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: edu
+      fonts:
+        - asset:  assets/fonts/edu/eduregular.ttf
+        - asset:  assets/fonts/edu/ebold.ttf
+          weight: 700
+    - family: teko
+      fonts:
+        - asset: assets/fonts/teko/Teko-Regular.ttf
+        - asset: assets/fonts/teko/Teko-Bold.ttf
+          weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

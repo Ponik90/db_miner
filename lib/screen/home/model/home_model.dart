@@ -17,3 +17,18 @@ class HomeModel {
     );
   }
 }
+
+class ApiHomeModel {
+  int? id;
+  String? text, author, category;
+
+  ApiHomeModel({this.id, this.text, this.author, this.category});
+
+  factory ApiHomeModel.mapToModel(Map m1) {
+    return ApiHomeModel(
+        id: m1['id'],
+        author: m1['author'],
+        category: m1['category'],
+        text: m1['text']);
+  }
+}
