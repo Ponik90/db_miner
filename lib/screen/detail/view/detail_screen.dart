@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:db_miner_app/screen/detail/controller/detail_controller.dart';
 import 'package:db_miner_app/screen/home/controller/home_controller.dart';
+import 'package:db_miner_app/screen/quotes/controller/quotes_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:share_plus/share_plus.dart';
 import 'dart:ui' as ui;
 
@@ -21,6 +23,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   HomeController homeController = Get.put(HomeController());
   EditController editController = Get.put(EditController());
+  QuotesController quotesController = Get.put(QuotesController());
   List l1 = Get.arguments;
   List<Color> bgColor = [Colors.white, Colors.black, ...Colors.primaries];
   GlobalKey repaintKey = GlobalKey();
@@ -29,6 +32,7 @@ class _DetailScreenState extends State<DetailScreen> {
   void initState() {
     super.initState();
     homeController.getJsonData();
+    quotesController.readCategory();
   }
 
   @override
@@ -38,6 +42,40 @@ class _DetailScreenState extends State<DetailScreen> {
         title: const Text("Detail Quotes"),
         actions: [
           IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return quotesController.categoryList.isEmpty
+                      ? Container(
+                          height: 300,
+                          width: MediaQuery.sizeOf(context).width,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "No Category Here Please select category",
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: quotesController.categoryList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              onTap: () {
+                                editController.insertQuotes(l1[0], l1[1],);
+                              },
+                              title: Text(
+                                  "${quotesController.categoryList[index].name}"),
+                            );
+                          },
+                        );
+                },
+              );
+            },
+            icon: const Icon(Icons.favorite),
+          ),
+          IconButton(
             onPressed: () async {
               RenderRepaintBoundary boundry = repaintKey.currentContext!
                   .findRenderObject() as RenderRepaintBoundary;
@@ -45,10 +83,8 @@ class _DetailScreenState extends State<DetailScreen> {
               ByteData? byteData =
                   await image.toByteData(format: ui.ImageByteFormat.png);
               Uint8List data = byteData!.buffer.asUint8List();
-
-              Directory directory = await getTemporaryDirectory();
-              File f1 =
-                  await File("${directory.path}/image.jpg").writeAsBytes(data);
+              Directory dir = await getTemporaryDirectory();
+              File f1 = await File("${dir.path}/image.jpg").writeAsBytes(data);
               await ImageGallerySaver.saveFile(f1.path);
               await Share.shareXFiles([XFile(f1.path)]);
             },

@@ -1,3 +1,5 @@
+import 'package:db_miner_app/screen/detail/model/detail_model.dart';
+import 'package:db_miner_app/utils/helper/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,4 +36,25 @@ class EditController extends GetxController {
 
   List<String> fontStyleList = ["edu", "teko"];
   RxnString fontStyle = RxnString();
+
+  RxList<DetailModel> quotesList = <DetailModel>[].obs;
+
+  Future<void> getQuotesData() async {
+    quotesList.value = await DbHelper.dbHelper.readQuotes();
+  }
+
+  String category = "";
+
+  void insertQuotes(
+    String quote,
+    String author
+  ) {
+    DbHelper.dbHelper.insertQuotes(quote, author, category);
+    getQuotesData();
+  }
+
+  void deleteQuotes(int id) {
+    DbHelper.dbHelper.deleteQuotes(id);
+    getQuotesData();
+  }
 }

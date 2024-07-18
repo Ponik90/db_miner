@@ -1,5 +1,4 @@
 import 'package:db_miner_app/screen/home/controller/home_controller.dart';
-import 'package:db_miner_app/screen/home/model/home_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,6 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text("HomeScreen"),
+          actions: [
+            IconButton(onPressed: (){
+              Get.toNamed('favorite');
+            }, icon: const Icon(Icons.favorite),),
+          ],
         ),
         body: Obx(
           () => ListView.builder(

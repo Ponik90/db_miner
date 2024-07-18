@@ -13,6 +13,6 @@ class HomeController extends GetxController {
   }
 
  void getApiData() {
-    getApiQuotesList = ApiHelper.apiHelper.getApi();
+    getApiQuotesList; //= ApiHelper.apiHelper.getApi();
   }
 }
