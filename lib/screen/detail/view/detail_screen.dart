@@ -27,6 +27,7 @@ class _DetailScreenState extends State<DetailScreen> {
   List l1 = Get.arguments;
   List<Color> bgColor = [Colors.white, Colors.black, ...Colors.primaries];
   GlobalKey repaintKey = GlobalKey();
+  String? wallpaperImage;
 
   @override
   void initState() {
@@ -63,7 +64,11 @@ class _DetailScreenState extends State<DetailScreen> {
                           itemBuilder: (context, index) {
                             return ListTile(
                               onTap: () {
-                                editController.insertQuotes(l1[0], l1[1],);
+                                editController.insertQuotes(
+                                  l1[0],
+                                  l1[1],
+                                  quotesController.categoryList[index].name!,
+                                );
                               },
                               title: Text(
                                   "${quotesController.categoryList[index].name}"),
@@ -75,28 +80,42 @@ class _DetailScreenState extends State<DetailScreen> {
             },
             icon: const Icon(Icons.favorite),
           ),
-          IconButton(
-            onPressed: () async {
-              RenderRepaintBoundary boundry = repaintKey.currentContext!
-                  .findRenderObject() as RenderRepaintBoundary;
-              ui.Image image = await boundry.toImage();
-              ByteData? byteData =
-                  await image.toByteData(format: ui.ImageByteFormat.png);
-              Uint8List data = byteData!.buffer.asUint8List();
-              Directory dir = await getTemporaryDirectory();
-              File f1 = await File("${dir.path}/image.jpg").writeAsBytes(data);
-              await ImageGallerySaver.saveFile(f1.path);
-              await Share.shareXFiles([XFile(f1.path)]);
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  onTap: () {
+                    Get.toNamed('wallpaper', arguments: wallpaperImage);
+                  },
+                  child: const Text("Set as Wallpaper"),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    RenderRepaintBoundary boundry = repaintKey.currentContext!
+                        .findRenderObject() as RenderRepaintBoundary;
+                    ui.Image image = await boundry.toImage();
+                    ByteData? byteData =
+                        await image.toByteData(format: ui.ImageByteFormat.png);
+                    Uint8List data = byteData!.buffer.asUint8List();
+                    Directory dir = await getTemporaryDirectory();
+                    File f1 =
+                        await File("${dir.path}/image.jpg").writeAsBytes(data);
+                    wallpaperImage = f1.path;
+                    // await ImageGallerySaver.saveFile(f1.path);
+                    await Share.shareXFiles([XFile(f1.path)]);
+                  },
+                  child: const Text("Share Image"),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    await Clipboard.setData(
+                      ClipboardData(text: l1[0]),
+                    );
+                  },
+                  child: const Text("Copy to clipboard"),
+                ),
+              ];
             },
-            icon: const Icon(Icons.share),
-          ),
-          IconButton(
-            onPressed: () async {
-              await Clipboard.setData(
-                ClipboardData(text: l1[0]),
-              );
-            },
-            icon: const Icon(Icons.copy),
           ),
         ],
       ),

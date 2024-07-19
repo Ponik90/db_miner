@@ -23,7 +23,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Favorite"),
-
       ),
       body: ListView.builder(
         itemCount: controller.categoryList.length,
@@ -33,6 +32,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               Get.toNamed('favoriteqoutes');
             },
             title: Text("${controller.categoryList[index].name}"),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                controller.deleteCategory(controller.categoryList[index].id!);
+              },
+            ),
           );
         },
       ),

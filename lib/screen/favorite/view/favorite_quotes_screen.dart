@@ -31,11 +31,8 @@ class _FavoriteQuotesScreenState extends State<FavoriteQuotesScreen> {
             () => ListView.builder(
           itemCount: controller.categoryList.length,
           itemBuilder: (context, index) {
-            return ExpansionTile(
-              title: Text("${controller.categoryList[index].name}"),
-              children: const [
-                Text(""),
-              ],
+            return const ListTile(
+              title: Text("dQuotes"),
             );
           },
         ),

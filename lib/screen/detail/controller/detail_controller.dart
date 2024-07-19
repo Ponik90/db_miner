@@ -43,11 +43,11 @@ class EditController extends GetxController {
     quotesList.value = await DbHelper.dbHelper.readQuotes();
   }
 
-  String category = "";
 
   void insertQuotes(
     String quote,
-    String author
+    String author,
+      String category
   ) {
     DbHelper.dbHelper.insertQuotes(quote, author, category);
     getQuotesData();

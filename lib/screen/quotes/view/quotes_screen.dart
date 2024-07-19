@@ -36,6 +36,12 @@ class _QuotesScreenState extends State<QuotesScreen> {
           IconButton(
             onPressed: () {
               quotesController.insertCategory(m1.category!);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Category added"),
+                ),
+              );
             },
             icon: const Icon(Icons.favorite_border),
           ),
