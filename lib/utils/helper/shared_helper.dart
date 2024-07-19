@@ -1,9 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedHelper {
+  static SharedHelper sharedHelper = SharedHelper._();
 
-  static SharedHelper sharedHelper =SharedHelper._();
   SharedHelper._();
+
   Future<void> setTheme(bool themeData) async {
     SharedPreferences shr = await SharedPreferences.getInstance();
     await shr.setBool('theme', themeData);

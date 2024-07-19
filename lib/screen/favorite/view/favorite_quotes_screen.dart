@@ -28,11 +28,11 @@ class _FavoriteQuotesScreenState extends State<FavoriteQuotesScreen> {
         title: const Text("Favorite"),
       ),
       body: Obx(
-            () => ListView.builder(
-          itemCount: controller.categoryList.length,
+        () => ListView.builder(
+          itemCount: editController.quotesList.length,
           itemBuilder: (context, index) {
-            return const ListTile(
-              title: Text("dQuotes"),
+            return ListTile(
+              title: Text("${editController.quotesList[index].quote}"),
             );
           },
         ),

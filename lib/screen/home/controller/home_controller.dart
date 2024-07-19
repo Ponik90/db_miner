@@ -1,4 +1,3 @@
-import 'package:db_miner_app/utils/helper/api_helper.dart';
 import 'package:db_miner_app/utils/helper/json_helper.dart';
 import 'package:db_miner_app/utils/helper/shared_helper.dart';
 import 'package:get/get.dart';
@@ -16,9 +15,5 @@ class HomeController extends GetxController {
 
   Future<void> getTheme() async {
     themeData.value = await SharedHelper.sharedHelper.getTheme();
-  }
-
-  void getApiData() {
-    getApiQuotesList; //= ApiHelper.apiHelper.getApi();
   }
 }

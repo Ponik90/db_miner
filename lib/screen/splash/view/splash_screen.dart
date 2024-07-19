@@ -13,7 +13,6 @@ class _SplashScreenState extends State<SplashScreen> {
   List<Color> colorizeColors = [
     Colors.purple,
     Colors.blue,
-
     Colors.yellow,
     Colors.red,
   ];
@@ -31,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
       () {
         Get.offAllNamed('home');
       },
-
     );
   }
 

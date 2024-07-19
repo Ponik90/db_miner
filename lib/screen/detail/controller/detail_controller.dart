@@ -33,22 +33,19 @@ class EditController extends GetxController {
   RxBool isImage = false.obs;
   RxBool isText = true.obs;
   Rx<Color> txtColor = Colors.black.obs;
+  RxnString shortBy = RxnString();
 
   List<String> fontStyleList = ["edu", "teko"];
   RxnString fontStyle = RxnString();
 
   RxList<DetailModel> quotesList = <DetailModel>[].obs;
+  List<DetailModel> filterList = <DetailModel>[];
 
   Future<void> getQuotesData() async {
     quotesList.value = await DbHelper.dbHelper.readQuotes();
   }
 
-
-  void insertQuotes(
-    String quote,
-    String author,
-      String category
-  ) {
+  void insertQuotes(String quote, String author, String category) {
     DbHelper.dbHelper.insertQuotes(quote, author, category);
     getQuotesData();
   }
@@ -56,5 +53,11 @@ class EditController extends GetxController {
   void deleteQuotes(int id) {
     DbHelper.dbHelper.deleteQuotes(id);
     getQuotesData();
+  }
+
+  Future<void> filterData(String value) async {
+    shortBy.value = value;
+    filterList = await DbHelper.dbHelper.filterTransaction(shortBy.value!);
+    quotesList.value = filterList;
   }
 }

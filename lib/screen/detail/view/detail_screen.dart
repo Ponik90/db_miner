@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -27,7 +26,6 @@ class _DetailScreenState extends State<DetailScreen> {
   List l1 = Get.arguments;
   List<Color> bgColor = [Colors.white, Colors.black, ...Colors.primaries];
   GlobalKey repaintKey = GlobalKey();
-  String? wallpaperImage;
 
   @override
   void initState() {
@@ -84,8 +82,18 @@ class _DetailScreenState extends State<DetailScreen> {
             itemBuilder: (context) {
               return [
                 PopupMenuItem(
-                  onTap: () {
-                    Get.toNamed('wallpaper', arguments: wallpaperImage);
+                  onTap: () async {
+                    RenderRepaintBoundary boundry = repaintKey.currentContext!
+                        .findRenderObject() as RenderRepaintBoundary;
+                    ui.Image image = await boundry.toImage();
+                    ByteData? byteData =
+                        await image.toByteData(format: ui.ImageByteFormat.png);
+                    Uint8List data = byteData!.buffer.asUint8List();
+                    Directory dir = await getTemporaryDirectory();
+                    File f1 =
+                        await File("${dir.path}/image.jpg").writeAsBytes(data);
+
+                    Get.toNamed('wallpaper', arguments: f1.path);
                   },
                   child: const Text("Set as Wallpaper"),
                 ),
@@ -100,8 +108,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     Directory dir = await getTemporaryDirectory();
                     File f1 =
                         await File("${dir.path}/image.jpg").writeAsBytes(data);
-                    wallpaperImage = f1.path;
-                    // await ImageGallerySaver.saveFile(f1.path);
+
                     await Share.shareXFiles([XFile(f1.path)]);
                   },
                   child: const Text("Share Image"),
@@ -145,13 +152,19 @@ class _DetailScreenState extends State<DetailScreen> {
                         fit: BoxFit.fill,
                       ),
                     ),
-                    Text(
-                      "${l1[0]}",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: editController.txtColor.value,
-                        fontFamily: editController.fontStyle.value,
-                        fontSize: 20,
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${l1[0]}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: editController.txtColor.value,
+                            fontFamily: editController.fontStyle.value,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -166,23 +179,39 @@ class _DetailScreenState extends State<DetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton.extended(
+                backgroundColor: Colors.blue.shade400,
                 heroTag: 'a1',
                 onPressed: () {
                   editController.isText.value = false;
                 },
-                label: const Text("Text"),
-                icon: const Icon(Icons.text_format_sharp),
+                label: const Text(
+                  "Text",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                icon: const Icon(
+                  Icons.text_format_sharp,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(
                 width: 20,
               ),
               FloatingActionButton.extended(
+                backgroundColor: Colors.blue.shade400,
                 heroTag: 'a2',
                 onPressed: () {
                   editController.isText.value = true;
                 },
-                label: const Text("Background"),
-                icon: const Icon(Icons.image_sharp),
+                label: const Text(
+                  "Background",
+                  style: TextStyle(color: Colors.white),
+                ),
+                icon: const Icon(
+                  Icons.image_sharp,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
@@ -214,12 +243,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  setState(
-                                    () {
-                                      editController.txtColor.value =
-                                          editController.bgColorList[index];
-                                    },
-                                  );
+                                  editController.txtColor.value =
+                                      editController.bgColorList[index];
                                 },
                                 child: Container(
                                   width: 50,
@@ -258,12 +283,8 @@ class _DetailScreenState extends State<DetailScreen> {
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  setState(
-                                    () {
-                                      editController.fontStyle.value =
-                                          editController.fontStyleList[index];
-                                    },
-                                  );
+                                  editController.fontStyle.value =
+                                      editController.fontStyleList[index];
                                 },
                                 child: Container(
                                   width: 80,

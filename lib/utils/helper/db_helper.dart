@@ -81,5 +81,15 @@ class DbHelper {
   Future<void> deleteQuotes(int id) async {
     db = await checkDb();
     String query = "DELETE FROM quotes WHERE id = $id ";
+    db!.rawDelete(query);
+  }
+
+  Future<List<DetailModel>> filterTransaction(String data) async {
+    db = await checkDb();
+    String query = "SELECT * FROM quotes WHERE category = $data";
+    List fdata = await db!.rawQuery(query);
+    List<DetailModel> filter =
+        fdata.map((e) => DetailModel.mapToModel(e)).toList();
+    return filter;
   }
 }

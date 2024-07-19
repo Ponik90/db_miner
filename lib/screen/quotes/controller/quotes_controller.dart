@@ -14,8 +14,7 @@ class QuotesController extends GetxController {
     readCategory();
   }
 
-  void deleteCategory(int id)
-  {
+  void deleteCategory(int id) {
     DbHelper.dbHelper.deleteCategory(id);
     readCategory();
   }

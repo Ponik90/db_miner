@@ -17,14 +17,11 @@ class _QuotesScreenState extends State<QuotesScreen> {
   List<Color> colors = [Colors.green, ...Colors.accents];
   HomeModel m1 = Get.arguments;
 
-  //ApiHomeModel apiHomeModel = Get.arguments;
-
   @override
   void initState() {
     super.initState();
     controller.getJsonData();
     quotesController.readCategory();
-    controller.getApiData();
   }
 
   @override
@@ -43,13 +40,11 @@ class _QuotesScreenState extends State<QuotesScreen> {
                 ),
               );
             },
-            icon: const Icon(Icons.favorite_border),
+            icon: const Icon(Icons.favorite),
           ),
         ],
       ),
-      body: GridView.builder(
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      body: ListView.builder(
         itemCount: m1.quotes!.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -60,17 +55,40 @@ class _QuotesScreenState extends State<QuotesScreen> {
               );
             },
             child: Container(
+              height: 300,
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(16),
               margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: colors[index],
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Text(
-                "${m1.quotes![index]}",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "${m1.quotes![index]}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.justify,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      "Edit Text >>",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -79,33 +97,3 @@ class _QuotesScreenState extends State<QuotesScreen> {
     );
   }
 }
-
-/*
-GridView.builder(
-        gridDelegate:
-        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemCount: apiHomeModel.text!.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              // Get.toNamed(
-              //   'detail',
-              //   arguments: [m1.quotes![index], m1.author![index], m1.category],
-              // );
-            },
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: colors[index], borderRadius: BorderRadius.circular(5),),
-              child: Text(
-                "${apiHomeModel.text}",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-            ),
-          );
-        },
-      ),
-* */
