@@ -1,8 +1,6 @@
 
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/01676cba-cca4-44e7-9344-9f5c70485dde">
-
 
 # **Quotes App**
 Quotes app made with Flutter in India.
