@@ -30,14 +30,14 @@ Save Category wise quotes.
 Change Theme.
 Set as Wallpaper.
 ## 📲 Screenshots
-
+<P>
 <img align="left" src="https://github.com/user-attachments/assets/01676cba-cca4-44e7-9344-9f5c70485dde" width="220px">
 <img align="left" src="https://github.com/user-attachments/assets/b688165f-8d22-49a4-b424-147d663efcd9" width="220px">
 <img src="https://github.com/user-attachments/assets/7a1269a4-34a4-441d-9905-beea25e97fd7" width="220px">
 
 <img align="left" src="https://github.com/user-attachments/assets/bc53cf51-a640-43c0-a419-2436c659c7f2" width="220px">
 <img align="left" src="https://github.com/user-attachments/assets/e92cc52e-ef4a-4965-9001-11afd811f775" width="220px">
-
+</P>
 
 <br><br>
 
